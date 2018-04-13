@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- HTML5インターフェースサンプル -->
+<script src="https://rawgit.com/val00250/GUI/master/expGuiRange/expGuiRange.js"></script>
+<script src="https://rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiStation/expGuiStation.js"></script>
+<link rel="stylesheet" href="https://rawgit.com/EkispertWebService/GUI/ed686b9d12d/expGuiStation/expCss/expGuiStation.css">
+
+<!-- 駅すぱあと路線図 -->
+<link rel="stylesheet" href="https://rmap.ekispert.jp/production/rosen.css" />
+<script src="https://rmap.ekispert.jp/production/rosen.js"></script>
+
+<!-- BootStrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<style>
+  html, body { width: 100%; height: 100%; }
+  #map { width: 100%; height: 40%; margin-top: 150px; }
+  .station-marker2 { border-radius: 50%; background: #ffb601; padding: 0; text-align: center;}
+  .input { display: inline-block; margin-left: 10px; }
+  #Station1 { padding: 5px; display: inline-block; }
+  #Station2 { padding: 5px; display: inline-block; }
+  #Station3 { padding: 5px; display: inline-block; }
+  #Station4 { padding: 5px; display: inline-block; }
+  #Station5 { padding: 5px; display: inline-block; }
+
+</style>
+
+
+<script type="text/javascript">
+
+
+var rosen;
+var accessKey = "rnwfzKX4rvNVZYat";
+var rangeApp;
+var stationApp1;
+var stationApp2;
+var stationApp3;
+var stationApp4;
+var stationApp5;
+var upperMinute1;
+var upperMinute2;
+var upperMinute3;
+var upperMinute4;
+var upperMinute5;
+
+function init() {
+  rosen = new Rosen("map", {
+    apiKey: "2jr5nchcswemrfjj67jvjaqu",
+    zoom: 15,
+    apiSetting: "https",
+    tileSetting: "https",
+    consoleViewControl: true
+  });
+  // 駅入力パーツ1 初期化
+  stationApp1 = new expGuiStation(document.getElementById("Station1"));
+  stationApp1.setConfigure("key", accessKey);
+  stationApp1.setConfigure("ssl", true);
+  stationApp1.setConfigure("maxStation",10);
+  stationApp1.setConfigure("type",stationApp1.TYPE_TRAIN +":"+ stationApp1.TYPE_PLANE +":"+ stationApp1.TYPE_SHIP);
+  stationApp1.dispStation();
+
+  // 駅入力パーツ2 初期化
+  stationApp2 = new expGuiStation(document.getElementById("Station2"));
+  stationApp2.setConfigure("key", accessKey);
+  stationApp2.setConfigure("ssl", true);
+  stationApp2.setConfigure("maxStation",10);
+  stationApp2.setConfigure("type",stationApp2.TYPE_TRAIN +":"+ stationApp2.TYPE_PLANE +":"+ stationApp2.TYPE_SHIP);
+  stationApp2.dispStation();
+
+  // 駅入力パーツ3 初期化
+  stationApp3 = new expGuiStation(document.getElementById("Station3"));
+  stationApp3.setConfigure("key", accessKey);
+  stationApp3.setConfigure("ssl", true);
+  stationApp3.setConfigure("maxStation",10);
+  stationApp3.setConfigure("type",stationApp3.TYPE_TRAIN +":"+ stationApp3.TYPE_PLANE +":"+ stationApp3.TYPE_SHIP);
+  stationApp3.dispStation();
+
+  // 駅入力パーツ4 初期化
+  stationApp4 = new expGuiStation(document.getElementById("Station4"));
+  stationApp4.setConfigure("key", accessKey);
+  stationApp4.setConfigure("ssl", true);
+  stationApp4.setConfigure("maxStation",10);
+  stationApp4.setConfigure("type",stationApp4.TYPE_TRAIN +":"+ stationApp4.TYPE_PLANE +":"+ stationApp4.TYPE_SHIP);
+  stationApp4.dispStation();
+
+  // 駅入力パーツ5 初期化
+  stationApp5 = new expGuiStation(document.getElementById("Station5"));
+  stationApp5.setConfigure("key", accessKey);
+  stationApp5.setConfigure("ssl", true);
+  stationApp5.setConfigure("maxStation",10);
+  stationApp5.setConfigure("type",stationApp5.TYPE_TRAIN +":"+ stationApp5.TYPE_PLANE +":"+ stationApp5.TYPE_SHIP);
+  stationApp5.dispStation();
+
+  // 範囲探索パーツ 初期化
+  rangeApp = new expGuiRange();
+  rangeApp.setConfigure("key", accessKey);
+
+}
+
+
+function btnOnClick() {
+  upperMinute1 = $('#upperMinute1').val();
+  upperMinute2 = $('#upperMinute2').val();
+  upperMinute3 = $('#upperMinute3').val();
+  upperMinute4 = $('#upperMinute4').val();
+  upperMinute5 = $('#upperMinute5').val();
+
+  var baseList = [];
+  var upperMinutes = [];
+  if(stationApp1.getStationCode()) {
+    baseList.push(stationApp1.getStationCode());
+    upperMinutes.push(upperMinute1);
+  }
+  if(stationApp2.getStationCode()) {
+    baseList.push(stationApp2.getStationCode());
+    upperMinutes.push(upperMinute2);
+  }
+  if(stationApp3.getStationCode()) {
+    baseList.push(stationApp3.getStationCode());
+    upperMinutes.push(upperMinute3);
+  }
+  if(stationApp4.getStationCode()) {
+    baseList.push(stationApp4.getStationCode());
+    upperMinutes.push(upperMinute4);
+  }
+  if(stationApp5.getStationCode()) {
+    baseList.push(stationApp5.getStationCode());
+    upperMinutes.push(upperMinute5);
+  }
+  console.log(baseList.join(':'));
+  console.log(upperMinutes);
+  rangeApp.searchMultipleStation(baseList.join(':'),upperMinutes.join(':'), function(isSuccess) {
+    if(!isSuccess) {
+      alert("駅が見つかりませんでした。");
+    } else {
+      var names = rangeApp.getStationList().split(',');
+      var codes = [];
+      for(var i=0; i<names.length; i++) {
+        codes.push(rangeApp.getPointObject(names[i]).code);
+      }
+      rosen.getStationsByCode(codes).then(function(stations) {
+        stations.forEach(function(station) {
+          var className = 'station-marker2';
+          // 駅マーカーセット
+          rosen.setStationMarker(station.code, {
+            icon: L.divIcon({
+              html: '',
+              className: className,
+              iconSize: [20, 20]
+            })
+          }).then(function(marker) {
+            var popup = Rosen.htmlPopup();
+            var popup_message = "";
+            marker.bindPopup(popup);
+          });
+        });
+      });
+    }
+  });
+}
+
+window.addEventListener('load', init);
+
+</script>
+<head>
+<body>
+  <!-- 駅名入力パーツ -->
+  <div>
+    <div id="Station1"></div>駅
+    <div class="input">
+      <div class="input-group input-group-sm mb-3">
+        <input type="number" value="5" class="form-control" id="upperMinute1" placeholder="5">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">分</span>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+  <div>
+    <div id="Station2"></div>駅
+    <div class="input">
+      <div class="input-group input-group-sm mb-3">
+        <input type="number" value="5" class="form-control" id="upperMinute2" placeholder="5">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">分</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div id="Station3"></div>駅
+    <div class="input">
+      <div class="input-group input-group-sm mb-3">
+        <input type="number" value="5" class="form-control" id="upperMinute3" placeholder="5">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">分</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div id="Station4"></div>駅
+    <div class="input">
+      <div class="input-group input-group-sm mb-3">
+        <input type="number" value="5" class="form-control" id="upperMinute4" placeholder="5">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">分</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div id="Station5"></div>駅
+    <div class="input">
+      <div class="input-group input-group-sm mb-3">
+        <input type="number" value="5" class="form-control" id="upperMinute5" placeholder="5">
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">分</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div>
+    <button type="button" onclick="btnOnClick()" class="btn btn-outline-primary btn-block">検索</button>
+  </div>
+  <div id="map"></div>
+<body>
+<html>
